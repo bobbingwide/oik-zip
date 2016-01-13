@@ -1,7 +1,7 @@
 === oik-zip ===
-Contributors: bobbingwide
+Contributors: bobbingwide, vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
-Tags: shortcodes, smart, lazy
+Tags: zip, 7-zip, plugins, package, oik-batch, CLI
 Requires at least: 4.3
 Tested up to: 4.4.1
 Stable tag: 0.0.0
@@ -10,18 +10,16 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-oik-zip.php packages the source files for a plugin into a .zip file ready for release to the general public.
+oik-zip.php packages the source files for a WordPress plugin into a .zip file ready for release to the general public.
 
 The packaging process ensures up to date versions are released
 
-* update the root plugin file
-* update the plugin's readme.txt
+* update the theme's style.css
+* update the theme's readme.txt
 * build a new version of the README.md file for GitHub
-* update language files, if applicable
-* reconcile shared library files
-* update the "oik-activation" logic
 
 What it does not do:
+
 * Create minimised versions of .css and .js files
 * run Unit Tests
 * perform translation
@@ -29,11 +27,12 @@ What it does not do:
 
 
 == Installation ==
-1. Upload the contents of the oik-zip plugin to the `/wp-content/plugins/oik-zip' directory
+1. Upload the contents of the oik-tip plugin to the `/wp-content/plugins/oik-tip' directory
 1. Create a batch file called zip.bat to invoke the oik-zip routine, through oikwp.php from oik-batch
 
 ```
 php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-wp.php c:\apache\htdocs\wordpress\wp-content\plugins\oik-zip\oik-zip.php %*
+
 ```
 
 == Frequently Asked Questions ==
@@ -44,8 +43,10 @@ Read the code
 
 = What are the dependencies? = 
 
-* oik-batch
-* 7-ZIP 
+* 7-ZIP
+* an editor
+* t2m - convert a readme.txt file to README.md ( github.com/bobbingwide/txt2md )
+* oik-batch ( github.com/bobbingwide/oik-batch )
 
 = Does it use Composer? =
 
@@ -76,5 +77,5 @@ First version of the plugin, available from GitHub and oik-plugins.
 
 == Changelog == 
 = 0.0.0 =
-* Added: First version GitHub
+* Added: First version on GitHub
 
