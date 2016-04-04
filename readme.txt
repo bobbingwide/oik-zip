@@ -3,8 +3,8 @@ Contributors: bobbingwide, vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: zip, 7-zip, plugins, package, oik-batch, CLI
 Requires at least: 4.3
-Tested up to: 4.4.1
-Stable tag: 0.0.0
+Tested up to: 4.5-RC1
+Stable tag: 0.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ What it does not do:
 
 * Create minimised versions of .css and .js files
 * run Unit Tests
-* perform translation
+* perform translation 
 * update the API reference
 
 
@@ -71,11 +71,18 @@ No. Updating the SVN version is currently a manual process performed after creat
 1. oik-zip in action
 
 == Upgrade Notice ==
+= 0.0.1 =
+Tested with WordPress 4.5-RC1
+
 = 0.0.0 =
 Finally put under version control. 
 First version of the plugin, available from GitHub and oik-plugins.
 
 == Changelog == 
+= 0.0.1 = 
+* Fixed: Copies oik-activation.php from oik/libs rather than oik/admin [github bobbingwide oik-zip issues 2]
+* Tested: With WordPress 4.5-RC1
+
 = 0.0.0 =
 * Added: First version on GitHub
 

@@ -4,7 +4,7 @@
 Plugin Name: oik-zip
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-zip
 Description: ZIP a WordPress plugin for release
-Version: 0.0.0
+Version: 0.0.1
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-zip
