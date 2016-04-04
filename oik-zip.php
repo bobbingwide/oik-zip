@@ -401,7 +401,10 @@ function add_files( $zip ) {
  * Update the admin/oik-activation.php to match the latest from oik
  *
  * If the admin folder exists and it contains "oik-activation.php"
- * then copy the latest from oik, if it's different
+ * then copy the latest from oik, if it's different.
+ *
+ * Now copying the latest version from oik/libs 
+ * 
  *  
  */	 
 function doadminactivation( $plugin ) {
@@ -411,7 +414,7 @@ function doadminactivation( $plugin ) {
 		  if ( file_exists( "admin/oik-activation.php" ) ) {
 				echo PHP_EOL;
 			  echo "admin/oik-activation.php copy time?";
-				copy( "../oik/admin/oik-activation.php", "admin/oik-activation.php" );
+				copy( "../oik/libs/oik-activation.php", "admin/oik-activation.php" );
 			} else {
 				echo "No admin activation required?";
 			} 
