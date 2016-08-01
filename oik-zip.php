@@ -35,7 +35,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 /**
  * Create a .zip file package for a plugin
  * 
- * Syntax: oikwp oik-zip.php plugin version 
+ * Syntax: oikwp oik-zip.php plugin version lang 
  * 
  * Run this from the plugins directory ( or above ) where the plugin is located
  * This should work for symlinked plugins! 
@@ -49,7 +49,7 @@ if ( !isset( $argc ) ) {
 } 
 
 if ( $argc < 2 ) {
-	echo "Syntax: oikwp oik-zip.php plugin version" ;
+	echo "Syntax: oikwp oik-zip.php plugin version lang" ;
 	echo PHP_EOL;
 	echo "e.g. oik oik-zip.php oik v3.0.0-RC1"; 
 	echo PHP_EOL;
@@ -59,14 +59,14 @@ if ( $argc < 2 ) {
 	//echo PHP_EOL;
 	$plugin = $argv[1];
 	$version = $argv[2];
+	$lang = bw_array_get( $argv, 3, null );
 	$filename = "$plugin $version.zip";
 	echo "Creating $filename";
 	echo PHP_EOL;
 	cd2plugins();
 	
 	//dogitarchive( $plugin, $filename );
-	
-	docontinue( "After creating archive: $plugin $version" );
+  //docontinue( "After creating git archive: $plugin $version" );
 	doreadmetxt( $plugin );
 	dosetversion( $plugin, $version );
 	docontinue( "$plugin $version" );
@@ -75,7 +75,9 @@ if ( $argc < 2 ) {
 	// First we need to ensure that there really is a string change
 	// which means a better comparison of the .pot files
 	//
-	//dol10n( $plugin );	// Should be after doreadmemd()
+	if ( $lang ) {
+		dol10n( $plugin, $lang );	// Should be after doreadmemd()
+	}
 	dolibs( $plugin );
 	
 	docontinue( "$plugin $version" );
@@ -276,7 +278,7 @@ function doreadmemd( $plugin ) {
  * 
  *
  */
-function dol10n( $plugin ) {
+function dol10n( $plugin, $lang ) {
   //setcd( "wp-content", "plugins/oik" );
 	//require_once( "oik_boot.inc");
   setcd( "wp-content", "plugins/$plugin" );
@@ -284,7 +286,7 @@ function dol10n( $plugin ) {
 	setcd( "wp-content", "plugins/$plugin/languages" );
   docontinue( "in plugin dir plugins/$plugin/languages" );
 	oik_require( "l10n.php", "oik-i18n" );
-	do_plugin( $plugin ); 
+	do_plugin( $plugin, $lang ); 
   cd2plugins();
 	
 }
