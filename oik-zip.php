@@ -4,7 +4,7 @@
 Plugin Name: oik-zip
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-zip
 Description: ZIP a WordPress plugin for release
-Version: 0.0.1
+Version: 0.0.2
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-zip
@@ -49,7 +49,7 @@ if ( !isset( $argc ) ) {
 } 
 
 if ( $argc < 2 ) {
-	echo "Syntax: oikwp oik-zip.php plugin version lang" ;
+	echo "Syntax: oikwp oik-zip.php plugin version [lang]" ;
 	echo PHP_EOL;
 	echo "e.g. oik oik-zip.php oik v3.0.0-RC1"; 
 	echo PHP_EOL;
@@ -70,6 +70,8 @@ if ( $argc < 2 ) {
 	doreadmetxt( $plugin );
 	dosetversion( $plugin, $version );
 	docontinue( "$plugin $version" );
+	doassets( $plugin );
+
 	doreadmemd( $plugin );
 	// We need to find a good time to decide when to do this
 	// First we need to ensure that there really is a string change
@@ -94,6 +96,7 @@ if ( $argc < 2 ) {
  * 
  * Create a .zip file using 7-Zip
  * 
+ * `
  
  command "C:\Program Files (x86)\7-Zip\7z.exe"
 
@@ -133,14 +136,16 @@ Usage: 7z <command> [<switches>...] <archive_name> [<file_names>...]
   -w[{path}]: assign Work directory. Empty path means a temporary directory
   -x[r[-|0]]]{@listfile|!wildcard}: eXclude filenames
   -y: assume Yes on all queries
-  
-Code Meaning 
-0 No error 
-1 Warning (Non fatal error(s)). For example, one or more files were locked by some other application, so they were not compressed. 
-2 Fatal error 
-7 Command line error 
-8 Not enough memory for operation 
-255 User stopped the process 
+  `
+	
+Code | Meaning 
+---- | -------
+0 | No error 
+1 | Warning (Non fatal error(s)). For example, one or more files were locked by some other application, so they were not compressed. 
+2 | Fatal error 
+7 | Command line error 
+8 | Not enough memory for operation 
+255 | User stopped the process 
 
   
 */
@@ -150,8 +155,9 @@ function do7zip( $plugin, $filename ) {
 
   $cmd = '"C:\\Program Files\\7-Zip\\7z.exe"';
   $cmd .= " a "; 
+	// Don't process these files.
   //$cmd .= " -xr!flh0grep.* -xr!.git* -xr!.idea* -xr!screenshot*";
-  $cmd .= " -xr!flh0grep.* -xr!.git* -xr!.idea* -xr!working/*";
+  $cmd .= " -xr!flh0grep.* -xr!.git* -xr!.idea* -xr!working/* -xr!assets/*";
   $cmd .= ' "';
   $cmd .= $plugin;
   $cmd .= '.zip" ';
@@ -438,10 +444,29 @@ function dolibs( $plugin ) {
 		oik_libs_compare( $plugin ); 
 	}
   cd2plugins();
-
-
 }
 
+
+/**
+ * Copy assets for the plugin
+ *
+ * @param string $plugin
+ */
+function doassets( $plugin ) {
+	setcd( "wp-content", "plugins/$plugin" );
+	if ( !is_dir( "assets" ) ) {
+		mkdir ( "assets" );		
+	}
+	setcd( "wp-content", "plugins/$plugin/assets" );
+	if ( !file_exists( "$plugin-banner-772x250.jpg" ) ) {
+		copy( "/apache/htdocs/oik-plugins/banners/$plugin-banner-772x250.jpg", "$plugin-banner-772x250.jpg" );
+	}
+	if ( !file_exists( "$plugin-icon-256x256.jpg" ) ) {
+		copy( "/apache/htdocs/oik-plugins/icons/$plugin-icon-256x256.jpg", "$plugin-icon-256x256.jpg" );
+	}
+	cd2plugins();
+
+}
 
  
    

@@ -1,10 +1,11 @@
 # oik-zip 
+![banner](https://raw.githubusercontent.com/bobbingwide/oik-zip/master/assets/oik-zip-banner-772x250.jpg)
 * Contributors: bobbingwide, vsgloik
 * Donate link: http://www.oik-plugins.com/oik/oik-donate/
 * Tags: zip, 7-zip, plugins, package, oik-batch, CLI
 * Requires at least: 4.3
-* Tested up to: 4.5-RC1
-* Stable tag: 0.0.1
+* Tested up to: 4.6-RC2
+* Stable tag: 0.0.2
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +72,9 @@ No. Updating the SVN version is currently a manual process performed after creat
 1. oik-zip in action
 
 ## Upgrade Notice 
+# 0.0.2 
+Attempts to ensure assets are present. Tested with WordPress 4.6-RC2
+
 # 0.0.1 
 Tested with WordPress 4.5-RC1
 
@@ -79,6 +83,10 @@ Finally put under version control.
 First version of the plugin, available from GitHub and oik-plugins.
 
 ## Changelog 
+# 0.0.2 
+* Added: Logic to copy assets files - used for GitHub
+* Changed: Assets files are not included in the .zip file
+
 # 0.0.1 
 * Fixed: Copies oik-activation.php from oik/libs rather than oik/admin [github bobbingwide oik-zip issues 2]
 * Tested: With WordPress 4.5-RC1
