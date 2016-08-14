@@ -4,7 +4,7 @@ Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: zip, 7-zip, plugins, package, oik-batch, CLI
 Requires at least: 4.3
 Tested up to: 4.6-RC2
-Stable tag: 0.0.2
+Stable tag: 0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,9 +14,14 @@ oik-zip.php packages the source files for a WordPress plugin into a .zip file re
 
 The packaging process ensures up to date versions are released
 
-* update the theme's style.css
-* update the theme's readme.txt
+* update the root plugin file
+* update the plugin's readme.txt
+* checks that banner and icon files are in the assets
 * build a new version of the README.md file for GitHub
+* update language files, if applicable
+* reconcile shared library files
+* update the "oik-activation" logic
+
 
 What it does not do:
 
@@ -27,8 +32,9 @@ What it does not do:
 
 
 == Installation ==
-1. Upload the contents of the oik-tip plugin to the `/wp-content/plugins/oik-tip' directory
-1. Create a batch file called zip.bat to invoke the oik-zip routine, through oikwp.php from oik-batch
+
+1. Upload the contents of the oik-zip plugin to the `/wp-content/plugins/oik-zip' directory
+1. Create a batch file called zip.bat to invoke the oik-zip routine, through oik-wp.php from oik-batch
 
 ```
 php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-wp.php c:\apache\htdocs\wordpress\wp-content\plugins\oik-zip\oik-zip.php %*
@@ -45,8 +51,8 @@ Read the code
 
 * 7-ZIP
 * an editor
-* t2m - convert a readme.txt file to README.md ( github.com/bobbingwide/txt2md )
-* oik-batch ( github.com/bobbingwide/oik-batch )
+* t2m - convert a readme.txt file to README.md ( https://github.com/bobbingwide/txt2md )
+* oik-batch ( https://github.com/bobbingwide/oik-batch )
 
 = Does it use Composer? =
 
@@ -71,6 +77,9 @@ No. Updating the SVN version is currently a manual process performed after creat
 1. oik-zip in action
 
 == Upgrade Notice ==
+= 0.0.3 = 
+Corrected readme files.
+
 = 0.0.2 =
 Attempts to ensure assets are present. Tested with WordPress 4.6-RC2
 
@@ -82,9 +91,13 @@ Finally put under version control.
 First version of the plugin, available from GitHub and oik-plugins.
 
 == Changelog == 
+= 0.0.3 = 
+* Changed: Corrected descriptions, which had been swapped between oik-tip and oik-zip  
+
 = 0.0.2 = 
 * Added: Logic to copy assets files - used for GitHub
 * Changed: Assets files are not included in the .zip file
+* Changed: Optionally performs language processing, therefore now needs to be run under oik-wp
 
 = 0.0.1 = 
 * Fixed: Copies oik-activation.php from oik/libs rather than oik/admin [github bobbingwide oik-zip issues 2]

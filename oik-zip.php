@@ -4,7 +4,7 @@
 Plugin Name: oik-zip
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-zip
 Description: ZIP a WordPress plugin for release
-Version: 0.0.2
+Version: 0.0.3
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-zip
@@ -35,7 +35,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 /**
  * Create a .zip file package for a plugin
  * 
- * Syntax: oikwp oik-zip.php plugin version lang 
+ * Syntax: oikwp oik-zip.php plugin version [lang] 
  * 
  * Run this from the plugins directory ( or above ) where the plugin is located
  * This should work for symlinked plugins! 
@@ -446,9 +446,13 @@ function dolibs( $plugin ) {
   cd2plugins();
 }
 
-
 /**
  * Copy assets for the plugin
+ * 
+ * - Creates the assets directory if missing
+ * - Copies the plugin banner and icon images
+ * 
+ * @TODO Source directory is currently hardcoded. Consider removing this logic when all the assets have been copied.
  *
  * @param string $plugin
  */
@@ -465,7 +469,6 @@ function doassets( $plugin ) {
 		copy( "/apache/htdocs/oik-plugins/icons/$plugin-icon-256x256.jpg", "$plugin-icon-256x256.jpg" );
 	}
 	cd2plugins();
-
 }
 
  
