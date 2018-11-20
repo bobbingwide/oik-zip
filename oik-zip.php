@@ -1,10 +1,9 @@
-<?php // (C) Copyright Bobbing Wide 2012-2016
-
+<?php // (C) Copyright Bobbing Wide 2012-2018
 /*
 Plugin Name: oik-zip
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-zip
 Description: ZIP a WordPress plugin for release
-Version: 0.0.3
+Version: 0.0.4
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-zip
@@ -29,8 +28,6 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
     http://www.gnu.org/licenses/gpl-2.0.html
 
 */
-
-
 
 /**
  * Create a .zip file package for a plugin
@@ -155,9 +152,7 @@ function do7zip( $plugin, $filename ) {
 
   $cmd = '"C:\\Program Files\\7-Zip\\7z.exe"';
   $cmd .= " a "; 
-	// Don't process these files.
-  //$cmd .= " -xr!flh0grep.* -xr!.git* -xr!.idea* -xr!screenshot*";
-  $cmd .= " -xr!flh0grep.* -xr!.git* -xr!.idea* -xr!working/* -xr!assets/*";
+	$cmd .= do7zip_exclusions();
   $cmd .= ' "';
   $cmd .= $plugin;
   $cmd .= '.zip" ';
@@ -174,6 +169,28 @@ function do7zip( $plugin, $filename ) {
   }
   $renamed = rename( "${plugin}.zip", $filename );
 
+}
+
+/**
+ * Return the list of exclusions
+ *
+ * Don't process these files.
+ * $cmd .= " -xr!flh0grep.* -xr!.git* -xr!.idea* -xr!screenshot*";
+ * 
+ * Note: We're in Windows but the forward slashes don't need to be backslashes.
+ * What's important is that you don't have *'s when specifying directories. 
+ * 
+ * ` -xr!flh0grep.* -xr!.git* -xr!.idea* -xr!working/ -xr!assets\\ ...`
+ * 
+ * @return string files to exclude from the archive 
+ */
+function do7zip_exclusions() {
+	$exclusions = array( null, "flh0grep.*", ".git*", ".idea*", "working/", "assets\*-banner-772x250.jpg", "assets\*-icon-256x256.jpg" );
+	$exclusions[] = "phpunit.*";
+	$exclusions[] = "tests/";
+	$exclusions[] = "node_modules/";
+	$exclusions = implode( " -xr!", $exclusions );
+	return( $exclusions );
 }
 
 /**
@@ -282,6 +299,8 @@ function doreadmemd( $plugin ) {
  * files for oik plugins. The theory being that it will load the plugin domain files
  * rather than having to make each plugins do it itself.
  * 
+ *
+ * @TODO This needs to be extended to ensure that the oik-libs-la_CY.mo language files are copied
  *
  */
 function dol10n( $plugin, $lang ) {
@@ -450,7 +469,7 @@ function dolibs( $plugin ) {
  * Copy assets for the plugin
  * 
  * - Creates the assets directory if missing
- * - Copies the plugin banner and icon images
+ * - Copies the plugin banner and icon images. Note: These are expected to be .jpg files, not .png files
  * 
  * @TODO Source directory is currently hardcoded. Consider removing this logic when all the assets have been copied.
  *
