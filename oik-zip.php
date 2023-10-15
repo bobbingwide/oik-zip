@@ -1,17 +1,17 @@
-<?php // (C) Copyright Bobbing Wide 2012-2018
+<?php // (C) Copyright Bobbing Wide 2012-2018, 2023
 /*
 Plugin Name: oik-zip
-Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-zip
+Plugin URI: https://www.oik-plugins.com/oik-plugins/oik-zip
 Description: ZIP a WordPress plugin for release
-Version: 0.0.4
+Version: 1.0.0
 Author: bobbingwide
-Author URI: http://www.oik-plugins.com/author/bobbingwide
+Author URI: https://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-zip
 Domain Path: /languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-    Copyright 2012-2016 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2012-2018, 2023 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,
@@ -35,7 +35,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Syntax: oikwp oik-zip.php plugin version [lang] 
  * 
  * Run this from the plugins directory ( or above ) where the plugin is located
- * This should work for symlinked plugins! 
+ * This should work for symlinked plugins!
+ * The .zip file is generated in the wp-content/plugins folder of the active install
+ * We want this to be moved to /apache/htdocs/uploads/plugins
  * 
  */
 // $argc =  "Server argc ".  $_SERVER['argc'];7
@@ -46,9 +48,9 @@ if ( !isset( $argc ) ) {
 } 
 
 if ( $argc < 2 ) {
-	echo "Syntax: oikwp oik-zip.php plugin version [lang]" ;
+	echo "Syntax: oikwp oik-zip.php plugin version branch [lang]" ;
 	echo PHP_EOL;
-	echo "e.g. oik oik-zip.php oik v3.0.0-RC1"; 
+	echo "e.g. oikwp oik-zip.php oik v3.0.0-RC1 master";
 	echo PHP_EOL;
 } else {
 	//$phpfile = $argv[0];
@@ -56,7 +58,8 @@ if ( $argc < 2 ) {
 	//echo PHP_EOL;
 	$plugin = $argv[1];
 	$version = $argv[2];
-	$lang = bw_array_get( $argv, 3, null );
+	$branch = bw_array_get( $argv, 3, 'master'); // alternative 'main'
+	$lang = bw_array_get( $argv, 4, null );
 	$filename = "$plugin $version.zip";
 	echo "Creating $filename";
 	echo PHP_EOL;
@@ -69,7 +72,7 @@ if ( $argc < 2 ) {
 	docontinue( "$plugin $version" );
 	doassets( $plugin );
 
-	doreadmemd( $plugin );
+	doreadmemd( $plugin, $branch );
 	// We need to find a good time to decide when to do this
 	// First we need to ensure that there really is a string change
 	// which means a better comparison of the .pot files
@@ -85,6 +88,7 @@ if ( $argc < 2 ) {
 	
 	do7zip( $plugin, $filename );
 	//dogitarchive( $plugin, $filename );
+	domovetouploadsplugins( $filename );
 }
 
  
@@ -148,27 +152,36 @@ Code | Meaning
 */
 function do7zip( $plugin, $filename ) {
 
-  cd2plugins();
+	cd2plugins();
 
-  $cmd = '"C:\\Program Files\\7-Zip\\7z.exe"';
-  $cmd .= " a "; 
-	$cmd .= do7zip_exclusions();
-  $cmd .= ' "';
-  $cmd .= $plugin;
-  $cmd .= '.zip" ';
-  $cmd .= $plugin;
-  $output = array();
-  $return_var = null;
-  echo $cmd;
-  echo PHP_EOL;
-  $lastline = exec( $cmd, $output, $return_var );
-  echo $return_var;
-  print_r( $output );
-  if ( file_exists( $filename ) ) { 
-    unlink( $filename );
-  }
-  $renamed = rename( "${plugin}.zip", $filename );
+	$cmd        = '"C:\\Program Files\\7-Zip\\7z.exe"';
+	$cmd        .= " a ";
+	$cmd        .= do7zip_exclusions();
+	$cmd        .= ' "';
+	$cmd        .= $plugin;
+	$cmd        .= '.zip" ';
+	$cmd        .= $plugin;
+	$output     = array();
+	$return_var = null;
+	echo $cmd;
+	echo PHP_EOL;
+	$lastline = exec( $cmd, $output, $return_var );
+	echo $return_var;
+	print_r( $output );
+	if ( file_exists( $filename ) ) {
+		unlink( $filename );
+	}
+	$renamed = rename( "{$plugin}.zip", $filename );
+}
 
+
+
+/**
+ *  Moves the file to uploads/plugins
+ *
+ */
+function domovetouploadsplugins( $filename ) {
+	rename( $filename, "C:/apache/htdocs/uploads/plugins/" . $filename );
 }
 
 /**
@@ -189,6 +202,8 @@ function do7zip_exclusions() {
 	$exclusions[] = "phpunit.*";
 	$exclusions[] = "tests/";
 	$exclusions[] = "node_modules/";
+	$exclusions[] = "cache";
+	$exclusions[] = "cache_v2";
 	$exclusions = implode( " -xr!", $exclusions );
 	return( $exclusions );
 }
@@ -229,8 +244,8 @@ function dogitarchive( $plugin, $filename ) {
  
  */
 function doreadmetxt( $plugin ) {
-  if ( !file_exists( "${plugin}\\readme.txt" ) ) {
-    copy( "readme.txt", "${plugin}\\readme.txt" );
+  if ( !file_exists( "{$plugin}\\readme.txt" ) ) {
+    copy( "readme.txt", "{$plugin}\\readme.txt" );
     echo "Created readme.txt for you to edit" . PHP_EOL;   
   }
 }   
@@ -245,7 +260,7 @@ function doreadmetxt( $plugin ) {
  */  
 function dosetversion( $plugin, $version ) {
   echo "Set the version to $version" . PHP_EOL;
-  $cmd = "vs ${plugin}\\readme.txt ${plugin}\\${plugin}.php" ; 
+  $cmd = "vs {$plugin}\\readme.txt {$plugin}\\{$plugin}.php {$plugin}\\changelog.txt" ;
   $output = array();
   $return_var = null;
   echo $cmd;
@@ -263,14 +278,14 @@ function dosetversion( $plugin, $version ) {
  * 
  * @param string $plugin   
  */ 
-function doreadmemd( $plugin ) {
+function doreadmemd( $plugin, $branch ) {
   $cwd = getcwd();
   echo __FUNCTION__ . $cwd;
   echo PHP_EOL;
   setcd( "wp-content", "plugins/$plugin" );
   docontinue( "in plugin dir" );
   $return_var = null;
-  $cmd = "t2m > README.md";
+  $cmd = "t2m $branch > README.md";
   echo $cmd;
   $lastline = exec( $cmd, $output, $return_var );
   echo $return_var;
